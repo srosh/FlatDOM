@@ -16,7 +16,42 @@ var setParent = function (index) {
 		this.tempParentIndex = index;
 	}
 }
+var syncDOM = function (cb) {
+	dom = this.sDOM;
+	this.leaveDOM();
+	if (cb) cb(this);
+	this.joinDOM(dom);
+}
 var leaveDOM = function () {
+	dom = this.sDOM;
+	// remove form dom index
+	// tags index
+	var tagIndices = dom.tags[this.name]
+		,tagIndex = tagIndices.indexOf(this);
+	if (tagIndex>-1) delete tagIndices[tagIndex];
+	// id index
+	if (this.attrs['id']) { delete dom.ids[this.attrs['id']]; } 
+
+	// class index
+	if (this.attrs['class']) {
+		var classNames = this.attrs['class'].split(' ');
+		while (classNames.length>0) {
+			var className = classNames.shift();
+			if (className) {
+				var classIndices = dom.classes[className]
+					,classIndex = classIndices.indexOf(this);
+				if (classIndex>-1) delete classIndices[classIndex];
+			}
+		}
+	}
+
+	for (key in this.attrs) {
+		if (key!='class' && key!='id') {
+			var attrIndices = dom.attributes[key]
+				,attrIndex = attrIndices.indexOf(this);
+			if (attrIndex>-1) delete attrIndices[attrIndex];
+		}
+	}
 	this.sDOM = null;
 }
 var joinDOM = function (dom) {
@@ -74,6 +109,7 @@ var maketag = function (tag,name,attrs,parent,text,textAfter) {
 	Object.defineProperty(tag, 'index',  {get: getIndex,set: undefined});
 	Object.defineProperty(tag, 'parent', {get: getParent,set: setParent});
 	tag.joinDOM = joinDOM;
+	tag.syncDOM = syncDOM; // use when changing attributes/tagname to reindex dom
 	tag.leaveDOM = leaveDOM;
 	tag.duplicate = duplicate;
 	if (name !== undefined && name !== null) tag.name = name;

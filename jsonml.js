@@ -13,7 +13,7 @@ function el(arr,dom,parent) {
 				if (dom.last==tag) tag.text = next;
 				else dom.last.textAfter = next;
 			} else {
-				tag.attrs = next;
+				tag.syncDOM(function(target){target.attrs = next;});
 			}
 		}
 	} else throw new Error('not a valid jsonml array')
