@@ -6,7 +6,7 @@ var jsonml = require('./jsonml.js');
 var md     = require('./md.js');
 
 
-var select = require('./dom.select.js');
+exports.select = require('./dom.select.js');
 
 exports.read    = {
 	html   : function () {},
