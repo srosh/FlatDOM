@@ -1,9 +1,10 @@
 var html = {};
-html.render = function (arr) {
+html.render = function (dom)
+{
 	var res = '';
 	var tail = [];
 	var special={'!--':'-->'};
-	var singletons=['area','base','br','col','command','embed','hr','img','input','link','meta','param','source'];
+	var singletons=['!doctype','area','base','br','col','command','embed','hr','img','input','link','meta','param','source'];
 	var urlAttrs=['src','href'];
 	var quotedAttr = function (attr) {
 		var val = tag.sttrs[attr];
@@ -38,9 +39,9 @@ html.render = function (arr) {
 			tail.unshift(['</' + tag.name + '>'+after,tag.parent]);
 		}
 	}
-	// var lparent = arr.name.parent;
-	for( var i in arr){
-		var line = arr[i];
+	// var lparent = dom.name.parent;
+	for( var i=0;i<dom.length;i++){
+		var line = dom[i];
 		var cparent = line.parent;
 		// if(tail.length > 0 && lparent >= cparent){}
 		while (tail.length > 0 && tail[0][1] >= cparent) res += tail.shift().shift();
@@ -50,6 +51,8 @@ html.render = function (arr) {
 	while (tail.length > 0) res += tail.shift().shift();
 	return res;
 }
+
+
 html.read = function (chunk,dom,options) {
 	var intersect = function (a1, a2) { //a1,a2 are sorted
 		var i1=0, i2=0, res = [];

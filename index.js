@@ -15,7 +15,6 @@ exports.read    = {
 	md     : md.read
 }
 exports.render  = {
-	html   : function (dom) {},
-	emmet  : emmet.render,
+	html   : html.render,
 	jsonml : jsonml.render
 }
