@@ -5,6 +5,11 @@ var emmet  = require('./emmet.js');
 var jsonml = require('./jsonml.js');
 var md     = require('./md.js');
 
+exports.html = html;
+exports.emmet = emmet;
+exports.jsonml = jsonml;
+exports.md = md;
+
 
 exports.select = require('./dom.select.js');
 
