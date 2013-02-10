@@ -4,7 +4,7 @@ html.render = function (dom)
 	var res = '';
 	var tail = [];
 	var special={'!--':'-->'};
-	var singletons=['!doctype','area','base','br','col','command','embed','hr','img','input','link','meta','param','source'];
+	var singletons=['!DOCTYPE','area','base','br','col','command','embed','hr','img','input','link','meta','param','source'];
 	var urlAttrs=['src','href'];
 	var quotedAttr = function (attr) {
 		var val = tag.sttrs[attr];
@@ -20,7 +20,7 @@ html.render = function (dom)
 			else res += ' ' + arg + '="' + tag.attrs[arg] + '"';
 		}
 		if (singletons.indexOf(tag.name)>-1) {
-			res += ' />';
+			res += '>';
 			if (tag.textAfter) {
 				res += tag.textAfter;
 			}

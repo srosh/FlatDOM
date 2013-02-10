@@ -1,6 +1,6 @@
 var domarr = require('./dom.arr.js');
 var emmet = {};
-emmet.read = function (source) //add target
+var read = function (source) //add target
 {
 	var res = domarr.makeDOM([]);
 	var openbranch = 0;
@@ -187,7 +187,9 @@ emmet.read = function (source) //add target
 	flush(source.length);
 	return res;
 }
-emmet.render = function (arr) { return '<em>emmet render is not implemented yet</em>'; }
+
+emmet.read = read;
+emmet.render = function (dom) { return null; }
 emmet.cssLink = function (uri) {
 	return 'link[rel="stylesheet" type="text/css" href="'+uri+'"]';
 }
