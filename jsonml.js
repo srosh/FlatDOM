@@ -30,7 +30,19 @@ jsonml.read = function (source) {
 }
 
 jsonml.render = function (dom) {
-	
+	var res = [],element=[],parent=res,grandparents={'-1':parent};
+	for (var i = 0; i < dom.length; i++) {
+		element = [];
+		var tag = dom[i];
+		parent=grandparents[tag.parent];
+		element.push(tag.name);
+		if(Object.keys(tag.attrs).length>0) element.push(tag.attrs);
+		if(tag.text) element.push(tag.text)
+		parent.push(element);
+		grandparents[tag.index] = element;
+		if(tag.textAfter) parent.push(tag.textAfter);
+	};
+	return res.length>1 ? res : res[0];
 }
 
 module.exports = jsonml;
