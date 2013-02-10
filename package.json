@@ -1,0 +1,20 @@
+{
+  "name": "flatdom",
+  "version": "0.0.0",
+  "description": "A flat array representation of DOM data",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "",
+  "keywords": [
+    "dom",
+    "array",
+    "node",
+    "css",
+    "select"
+  ],
+  "author": "Soroosh Izadian",
+  "license": "MIT",
+  "readmeFilename": "README.md"
+}
