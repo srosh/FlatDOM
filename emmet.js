@@ -210,8 +210,17 @@ var read = function (source,toDOM,toParent) //add target
 }
 
 emmet.read = read;
+
 emmet.render = function (dom) { return null; }
 
+// emmet.expand = function (abbrText,abbrsObj) {
+// 	var ret = abbrText;
+// 	for (var key in abbrsObj) {
+// 		var reg = new RegExp(key+'(?=[>+\]\[\^\.#{}]|$)','g')
+// 		ret = ret.replace(reg,abbrsObj[key]);
+// 	}
+// 	return ret;
+// }
 emmet.html5 = function () {
 	return '!DOCTYPE[html]+html';
 }
