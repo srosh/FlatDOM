@@ -141,9 +141,9 @@ var availableParentIndices = function () {
 	return available; // ascending list of parent indices
 }
 
-var append = function (dom) {
+var append = function (dom,toParent) {
 	if (dom.isDOM) {
-		var lastIndex = this.openTags.pop();
+		var lastIndex = (toParent===undefined ? this.openTags.pop() : toParent);
 		var closedTags = [];
 		while (dom.length > 0) {
 			var tag = dom.shift();

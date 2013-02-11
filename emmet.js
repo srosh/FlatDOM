@@ -1,5 +1,7 @@
 var domarr = require('./dom.arr.js');
-var emmet = {};
+var DOM = require('./dom');
+
+
 var read = function (source,toDOM,toParent) //add target
 {
 	var res = toDOM || domarr.makeDOM([]);
@@ -209,11 +211,20 @@ var read = function (source,toDOM,toParent) //add target
 	return res;
 }
 
-emmet.read = read;
+function Emmet () {
+	DOM.apply(this,arguments);
+}
+require('util').inherits(Emmet,DOM);
 
-emmet.render = function (dom) { return null; }
+Emmet.prototype.read = function(source,toParent) {
+	read(source,this.dom,toParent);
+}
 
-// emmet.expand = function (abbrText,abbrsObj) {
+Emmet.read = read;
+
+Emmet.render = function (dom) { return null; }
+
+// Emmet.expand = function (abbrText,abbrsObj) {
 // 	var ret = abbrText;
 // 	for (var key in abbrsObj) {
 // 		var reg = new RegExp(key+'(?=[>+\]\[\^\.#{}]|$)','g')
@@ -221,23 +232,23 @@ emmet.render = function (dom) { return null; }
 // 	}
 // 	return ret;
 // }
-emmet.html5 = function () {
+Emmet.html5 = function () {
 	return '!DOCTYPE[html]+html';
 }
-emmet.cssLink = function (uri) {
+Emmet.cssLink = function (uri) {
 	return 'link[rel="stylesheet" type="text/css" href="'+uri+'"]';
 }
-emmet.jsLink = function (uri) {
+Emmet.jsLink = function (uri) {
 	return 'script[src="'+uri+'"]';
 }
-emmet.text = function (text) {
+Emmet.text = function (text) {
 	return '{'+text.replace(/[{}()\[\]\\]/g,'\\'+'$&')+'}';
 }
-emmet.script = function (text) {
-	return 'script[type="text/javascript"]'+emmet.text(text);
+Emmet.script = function (text) {
+	return 'script[type="text/javascript"]'+Emmet.text(text);
 }
-emmet.join = function (arr) {
+Emmet.join = function (arr) {
 	return arr.join('+');
 }
 
-module.exports = emmet;
+module.exports = Emmet;

@@ -1,5 +1,5 @@
-var domarr = require('./dom.arr')
-	,jsonml = {};
+var domarr = require('./dom.arr');
+var DOM = require('./dom');
 
 function el(arr,dom,parent) {
 	if (arr instanceof Array) {
@@ -16,10 +16,10 @@ function el(arr,dom,parent) {
 				tag.syncDOM(function(target){target.attrs = next;});
 			}
 		}
-	} else throw new Error('not a valid jsonml array')
+	} else throw new Error('not a valid JSONML array')
 }
 
-jsonml.read = function (source,toDOM,toParent) {
+var read = function (source,toDOM,toParent) {
 	if (typeof source == 'string') {
 		source = JSON.parse(source);
 	}
@@ -29,7 +29,7 @@ jsonml.read = function (source,toDOM,toParent) {
 	return res;
 }
 
-jsonml.render = function (dom) {
+var render = function (dom) {
 	var res = [],element=[],parent=res,grandparents={'-1':parent};
 	for (var i = 0; i < dom.length; i++) {
 		element = [];
@@ -45,4 +45,21 @@ jsonml.render = function (dom) {
 	return res.length>1 ? res : res[0];
 }
 
-module.exports = jsonml;
+
+
+function JSONML () {
+	DOM.apply(this,arguments);
+}
+require('util').inherits(JSONML,DOM);
+
+JSONML.prototype.read = function(source,toParent) {
+	read(source,this.dom,toParent);
+	return this;
+}
+JSONML.prototype.render = function() {
+	return render(this.dom);
+}
+
+JSONML.read = read;
+JSONML.render = render;
+module.exports = JSONML;

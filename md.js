@@ -1,13 +1,27 @@
 var markdownobj = require('markdown').markdown
-var jsonml = require('./jsonml');
-var markdown = {}
+var JSONML = require('./jsonml');
+var DOM = require('./dom');
 
-markdown.read = function (source,toDOM,toParent) {
-	var res = jsonml.read(markdownobj.toHTMLTree(source),toDOM,toParent);
+var read = function (source,toDOM,toParent) {
+	var res = JSONML.read(MarkDownobj.toHTMLTree(source));
 	res.shift();
+	if (toDOM) {
+		//var parent = (toParent===undefined ? toDOM.openTags.pop() : toParent);
+		toDOM.append(res,toParent);
+		return toDOM;
+	}
 	return res;
 }
 
-markdown.render = null;
+function MarkDown () {
+	DOM.apply(this,arguments);
+}
+require('util').inherits(MarkDown,DOM);
 
-module.exports = markdown;
+MarkDown.prototype.read = function(source,toParent) {
+	read(source,this.dom,toParent);
+}
+
+MarkDown.read = read;
+
+module.exports = MarkDown;

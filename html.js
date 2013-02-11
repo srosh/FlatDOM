@@ -1,5 +1,7 @@
-var html = {};
-html.render = function (dom)
+var domarr = require('./dom.arr');
+var DOM = require('./dom');
+
+var render = function (dom)
 {
 	var res = '';
 	var tail = [];
@@ -52,8 +54,7 @@ html.render = function (dom)
 	return res;
 }
 
-
-html.read = function (chunk,dom,options) {
+var read = function (chunk,dom,options) {
 	var intersect = function (a1, a2) { //a1,a2 are sorted
 		var i1=0, i2=0, res = [];
 		while( i1 < a1.length && i2 < a2.length ) {
@@ -308,4 +309,23 @@ html.read = function (chunk,dom,options) {
 	};
 }
 
-module.exports = html;
+
+function HTML () {
+	DOM.apply(this,arguments);
+}
+require('util').inherits(HTML,DOM);
+
+HTML.prototype.read = function(source,toParent) {
+	read(source,this.dom,toParent);
+	return this;
+}
+HTML.prototype.render = function() {
+	return render(this.dom);
+}
+
+HTML.read = read;
+HTML.render = render;
+
+
+
+module.exports = HTML;
