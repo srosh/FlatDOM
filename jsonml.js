@@ -19,13 +19,13 @@ function el(arr,dom,parent) {
 	} else throw new Error('not a valid jsonml array')
 }
 
-jsonml.read = function (source) {
+jsonml.read = function (source,toDOM,toParent) {
 	if (typeof source == 'string') {
 		source = JSON.parse(source);
 	}
-
-	var res = domarr.makeDOM([]);
-	el(source,res,-1);
+	var res = toDOM || domarr.makeDOM([]);
+	var parent = (toParent===undefined ? res.openTags.pop() : toParent);
+	el(source,res,parent);
 	return res;
 }
 

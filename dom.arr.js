@@ -141,7 +141,7 @@ var availableParentIndices = function () {
 	return available; // ascending list of parent indices
 }
 
-var concat = function (dom) {
+var append = function (dom) {
 	if (dom.isDOM) {
 		var lastIndex = this.openTags.pop();
 		var closedTags = [];
@@ -261,7 +261,7 @@ var makedom = function (dom) {
 	dom.attributes.map = map; dom.attributes.indices = indices;
 	dom.select = select;
 	dom.each = each;
-	dom.concat = concat;
+	dom.append = append;
 	dom.tree = tree;
 	Object.defineProperty(dom, 'isEmpty',  {get: isEmpty,set: undefined});
 	Object.defineProperty(dom, 'last',  {get: getLastTag,set: undefined});

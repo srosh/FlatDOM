@@ -1,14 +1,14 @@
 var domarr = require('./dom.arr.js');
 var emmet = {};
-var read = function (source) //add target
+var read = function (source,toDOM,toParent) //add target
 {
-	var res = domarr.makeDOM([]);
+	var res = toDOM || domarr.makeDOM([]);
 	var openbranch = 0;
 	var multi = '';
 	var temp = '';
 	var brackets = '';
 	var targetText = 0; // tag
-	var parent = -1;
+	var parent = (toParent===undefined ? res.openTags.pop() : toParent);
 	var current = domarr.makeTag([],'',{},parent);
 
 	var flush = function(pos)
@@ -45,10 +45,10 @@ var read = function (source) //add target
 							var newTag = resolve$(children[j],nstr);
 							childnodes.push(newTag);
 						}
-						res.concat(childnodes); //.each(function(tag){tag.closed=true;})
+						res.append(childnodes); //.each(function(tag){tag.closed=true;})
 					}
 					if (source.length > pos && source[pos]=='>') {
-						res.concat(read(source.substring(pos+1)));
+						res.append(read(source.substring(pos+1)));
 					}
 					var lastParentTag=res.last;
 					while (lastParentTag && lastParentTag.index > parent) {
@@ -60,7 +60,7 @@ var read = function (source) //add target
 		} else if (current.name.length>0){
 			res.push(current);
 		} else if (children) {
-			res.concat(children);
+			res.append(children);
 			if (current.closed) {
 				var lastParentTag=res.last;
 				while (lastParentTag && lastParentTag.index > parent) {
@@ -72,7 +72,7 @@ var read = function (source) //add target
 		targetText = 0;
 		multi = '';
 		brackets = '';
-		parent=res.openTags.pop();
+		parent = res.openTags.pop();
 		current = domarr.makeTag([],'',{},parent); //console.log (current.parent,res.openTags);
 	}
 	var addChar = function(ch) // can move () here
@@ -137,17 +137,17 @@ var read = function (source) //add target
 			current.attrs[key] = true;
 		}
 	}
-
+	var charIsSlashed = false;
 	// parentesies
 	for (var i=0; i<source.length ; i++)
 	{
 		var currentChar = source[i];
-		if (currentChar=='(') {
+		if (currentChar=='(' && !charIsSlashed) {
 			openbranch ++;
 			if (openbranch>1) {
 				temp += '(';
 			}
-		} else if (currentChar==')') {
+		} else if (currentChar==')' && !charIsSlashed) {
 			openbranch --;
 			if (openbranch == 0) {
 				current.children = read(temp);
@@ -159,32 +159,46 @@ var read = function (source) //add target
 			}
 		} else if (openbranch > 0) temp += currentChar ;
 		else {
-			if (currentChar==']') { 
+			if (charIsSlashed) {
+				addChar(currentChar);
+				charIsSlashed=false;
+			} else if (currentChar=='\\') {
+				charIsSlashed=true;
+			} else if (currentChar==']' && targetText==3) { 
 				targetText = 0;
 				readbrackets();
 				brackets = '';
 			} else if (targetText == 3) {
 				addChar(currentChar);
-			} else if (currentChar=='}') {
+			} else if (currentChar=='}' && targetText==5) {
 				targetText = 0;
-			} else if (currentChar=='{') {
+			} else if (currentChar=='{' && targetText<3) {
 				targetText = 5;
-			} else if (currentChar=='[') {
+			} else if (currentChar=='[' && targetText<3) {
 				targetText = 3;
-			} else if (currentChar == '+') {
+			} else if (currentChar == '+' && targetText<3) {
 				current.closed = true;
 				flush(i);
-			} else if (currentChar == '>') {
+			} else if (currentChar == '^' && targetText<3) {
+				if (current.name) {
+					current.closed = true;
+					flush(i);
+				} else {
+					res[current.parent].closed = true;
+					parent = res.openTags.pop();
+					current.parent = parent;
+				}
+			} else if (currentChar == '>' && targetText<3) {
 				if (multi.length>0) {
 					flush(i);
 					return res;
 				} else flush(i);
-			} else if (currentChar == '.') {
+			} else if (currentChar == '.' && targetText<3) {
 				targetText = 1;
 				if (current.attrs['class']) addChar(' ');
-			} else if (currentChar == '#') {
+			} else if (currentChar == '#' && targetText<3) {
 				targetText = 2;
-			} else if (currentChar == '*') {
+			} else if (currentChar == '*' && targetText<3) {
 				targetText = 4;
 			} else {
 				addChar(currentChar);
@@ -206,6 +220,12 @@ emmet.cssLink = function (uri) {
 }
 emmet.jsLink = function (uri) {
 	return 'script[src="'+uri+'"]';
+}
+emmet.text = function (text) {
+	return '{'+text.replace(/[{}()\[\]\\]/g,'\\'+'$&')+'}';
+}
+emmet.script = function (text) {
+	return 'script[type="text/javascript"]'+emmet.text(text);
 }
 emmet.join = function (arr) {
 	return arr.join('+');
