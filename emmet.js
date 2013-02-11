@@ -95,6 +95,9 @@ var read = function (source) //add target
 			case 4: //multi
 			multi += ch;
 			break;
+			case 5: //text
+			if (current.text) current.text+=ch;
+			else current.text = ch;
 			default:
 		}
 	}
@@ -162,6 +165,10 @@ var read = function (source) //add target
 				brackets = '';
 			} else if (targetText == 3) {
 				addChar(currentChar);
+			} else if (currentChar=='}') {
+				targetText = 0;
+			} else if (currentChar=='{') {
+				targetText = 5;
 			} else if (currentChar=='[') {
 				targetText = 3;
 			} else if (currentChar == '+') {
@@ -190,6 +197,10 @@ var read = function (source) //add target
 
 emmet.read = read;
 emmet.render = function (dom) { return null; }
+
+emmet.html5 = function () {
+	return '!DOCTYPE[html]+html';
+}
 emmet.cssLink = function (uri) {
 	return 'link[rel="stylesheet" type="text/css" href="'+uri+'"]';
 }
