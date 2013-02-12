@@ -25,6 +25,17 @@ DOM.prototype = {
 			this.dom.append(source.dom,toParent);
 		} else if (source.isDOM) {
 			this.dom.append(source,toParent);
+		} else if (typeof source == 'string') {
+			var last = this.dom.last;
+			if (last) {
+				if (toParent && last.index>toParent) {
+					var target = this.dom.lastChild(toParent);
+					if (target) target.textAfter = (target.textAfter ? target.textAfter+source : source);
+					else this.dom[toParent].text = (this.dom[toParent].text ? this.dom[toParent].text+source : source);
+				} else {
+					last.text = (last.text ? last.text+source : source);
+				}
+			}
 		}
 		return this; // ready to chain;
 	},

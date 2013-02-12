@@ -141,6 +141,23 @@ var availableParentIndices = function () {
 	return available; // ascending list of parent indices
 }
 
+var firstChild = function (parentIndex) {
+	var parent = this[parentIndex];
+	var next = parent.next;
+	if (!next || (next.index - parent.index == 1)) return null;
+	else {
+		return this[parentIndex+1];
+	}
+}
+var lastChild  = function (parentIndex) {
+	var parent = this[parentIndex];
+	var next = parent.next;
+	if (!next || (next.index - parent.index == 1)) return null;
+	else {
+		return this[next.index-1];
+	}
+}
+
 var append = function (dom,toParent) {
 	if (dom.isDOM) {
 		var lastIndex = (toParent===undefined ? this.openTags.pop() : toParent);
@@ -269,6 +286,8 @@ var makedom = function (dom) {
 	Object.defineProperty(dom, 'openTags',  {get: availableParentIndices,set: undefined});
 	dom.push = push.bind(dom);
 	dom.pop = pop;
+	dom.firstChild = firstChild;
+	dom.lastChild = lastChild;
 	dom.unshift = unshift.bind(dom);
 	dom.shift = shift;
 	dom.log = function () {

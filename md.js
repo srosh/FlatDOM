@@ -3,7 +3,7 @@ var JSONML = require('./jsonml');
 var DOM = require('./dom');
 
 var read = function (source,toDOM,toParent) {
-	var res = JSONML.read(MarkDownobj.toHTMLTree(source));
+	var res = JSONML.read(markdownobj.toHTMLTree(source));
 	res.shift();
 	if (toDOM) {
 		//var parent = (toParent===undefined ? toDOM.openTags.pop() : toParent);
