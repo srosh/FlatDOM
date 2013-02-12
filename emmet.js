@@ -236,16 +236,16 @@ Emmet.html5 = function () {
 	return '!DOCTYPE[html]+html';
 }
 Emmet.cssLink = function (uri) {
-	return 'link[rel="stylesheet" type="text/css" href="'+uri+'"]';
+	return 'link[rel="stylesheet" type="text/css" href="'+uri+'"]^';
 }
 Emmet.jsLink = function (uri) {
-	return 'script[src="'+uri+'"]';
+	return 'script[src="'+uri+'"]^';
 }
 Emmet.text = function (text) {
 	return '{'+text.replace(/[{}()\[\]\\]/g,'\\'+'$&')+'}';
 }
 Emmet.script = function (text) {
-	return 'script[type="text/javascript"]'+Emmet.text(text);
+	return 'script[type="text/javascript"]'+Emmet.text(text)+'^';
 }
 Emmet.join = function (arr) {
 	return arr.join('+');

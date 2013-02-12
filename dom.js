@@ -41,6 +41,10 @@ DOM.prototype = {
 	},
 	render : function () {
 		return this.dom;
+	},
+	writeFile: function (fn) {
+		fs.writeFileSync(fn,this.render());
+		return this;
 	}
 }
 
