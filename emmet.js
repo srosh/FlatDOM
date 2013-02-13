@@ -248,7 +248,7 @@ Emmet.script = function (text) {
 	return 'script[type="text/javascript"]'+Emmet.text(text)+'^';
 }
 Emmet.join = function (arr) {
-	return arr.join('+');
+	return '('+arr.join(')+(')+')';
 }
 
 module.exports = Emmet;

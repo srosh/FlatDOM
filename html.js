@@ -1,7 +1,7 @@
 var domarr = require('./dom.arr');
 var DOM = require('./dom');
 
-var render = function (dom)
+var render = function (dom,notab)
 {
 	var res = '';
 	var tail = [];
@@ -15,7 +15,17 @@ var render = function (dom)
 			else return val.replace(/\"/g,'&quot;');
 		} else return val;
 	}
+	var pad = function (plus) {
+		var temp='';
+		plus = plus || 0;
+		if (!notab && res.length && res[res.length-1]=='>') {
+			temp += '\n';
+			while (temp.length<tail.length+plus) temp+='\t';
+		}
+		return temp;
+	}
 	var handleTag = function (tag) {
+		if (res.length &&  res[res.length-1]=='>') res+=pad(1);
 		res += '<' + tag.name ;
 		for (var arg in tag.attrs){
 			if (typeof(tag.attrs[arg])=='boolean' && tag.attrs[arg]) res += ' ' + arg;
@@ -38,7 +48,7 @@ var render = function (dom)
 				res += tag.text;
 				if (tag.textAfter) after = tag.textAfter;
 			}
-			tail.unshift(['</' + tag.name + '>'+after,tag.parent]);
+			tail.unshift([ tag.name ,after,tag.parent]);
 		}
 	}
 	// var lparent = dom.name.parent;
@@ -46,11 +56,22 @@ var render = function (dom)
 		var line = dom[i];
 		var cparent = line.parent;
 		// if(tail.length > 0 && lparent >= cparent){}
-		while (tail.length > 0 && tail[0][1] >= cparent) res += tail.shift().shift();
+		while (tail.length > 0 && tail[0][2] >= cparent) {
+			var tailShift= tail.shift();
+			var toClose = tailShift.shift()
+				,textAfter = tailShift.shift();
+			if (res.substr(-(toClose.length+2))=='<'+toClose+'>') res += '</' + toClose + '>' + textAfter;
+			else res += pad(1) + '</' + toClose + '>' + textAfter;
+		}
 		handleTag(line);
 		// lparent = cparent;
 	}
-	while (tail.length > 0) res += tail.shift().shift();
+	while (tail.length > 0) {
+		var tailShift= tail.shift();
+		var toClose = tailShift.shift()
+			,textAfter = tailShift.shift();
+		res += pad(1) + '</' + toClose + '>' + textAfter;
+	}
 	return res;
 }
 
