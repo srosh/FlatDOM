@@ -4,9 +4,12 @@
   "description": "A flat array representation of DOM data",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"no tests yet\" && exit 1"
   },
-  "repository": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/srosh/FlatDOM.git"
+  },
   "keywords": [
     "dom",
     "array",
@@ -14,6 +17,10 @@
     "css",
     "select"
   ],
+
+  "dependencies" : {
+    "markdown"   :  "0.4.x"
+  },
   "author": "Soroosh Izadian",
   "license": "MIT",
   "readmeFilename": "README.md"

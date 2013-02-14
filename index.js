@@ -14,16 +14,3 @@ module.exports.md = md;
 
 
 module.exports.select = require('./dom.select.js');
-
-// module.exports.read    = {
-// 	html   : function () {},
-// 	emmet  : emmet.read,
-// 	jsonml : jsonml.read,
-// 	md     : md.read
-// }
-// module.exports.render  = {
-// 	html   : html.render,
-// 	jsonml : jsonml.render
-// }
-
-

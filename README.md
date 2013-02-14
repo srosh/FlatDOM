@@ -1,6 +1,6 @@
 FlatDOM
 ===
-## What
+## What is it
 This is a module for manipulating HTML/XML DOM using server-side JavaScript (Node.js). 
 
 ## Motivation
