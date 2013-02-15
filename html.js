@@ -25,7 +25,8 @@ var render = function (dom,notab)
 		return temp;
 	}
 	var handleTag = function (tag) {
-		if (res.length &&  res[res.length-1]=='>') res+=pad(1);
+		if (res.length &&  res[res.length-1]=='>' && !special[tag.name]) res+=pad(1);
+		if (special[tag.name]) res+='\n';
 		res += '<' + tag.name ;
 		for (var arg in tag.attrs){
 			if (typeof(tag.attrs[arg])=='boolean' && tag.attrs[arg]) res += ' ' + arg;

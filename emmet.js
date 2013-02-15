@@ -245,10 +245,13 @@ Emmet.text = function (text) {
 	return '{'+text.replace(/[{}()\[\]\\]/g,'\\'+'$&')+'}';
 }
 Emmet.script = function (text) {
-	return 'script[type="text/javascript"]'+Emmet.text(text)+'^';
+	return 'script[type="text/javascript"]'+Emmet.text(text);
 }
 Emmet.join = function (arr) {
 	return '('+arr.join(')+(')+')';
+}
+Emmet.title = function (text) {
+	return 'title'+Emmet.text(text);
 }
 
 module.exports = Emmet;
