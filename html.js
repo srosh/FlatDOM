@@ -4,7 +4,7 @@ var DOM = require('./dom');
 var render = function (dom,notab)
 {
 	var res = '';
-	var tail = [];
+	var tail = [],originalnotab=notab;
 	var special={'!--':'-->'};
 	var singletons=['!DOCTYPE','area','base','br','col','command','embed','hr','img','input','link','meta','param','source'];
 	var nows = ['pre']
@@ -26,7 +26,10 @@ var render = function (dom,notab)
 		return temp;
 	}
 	var handleTag = function (tag) {
-		if (res.length &&  res[res.length-1]=='>' && !special[tag.name] && nows.indexOf(tag.name)==-1) res+=pad(1);
+		if (nows.indexOf(tag.name)>-1) {
+			notab = true;
+		}
+		if (res.length &&  res[res.length-1]=='>' && !special[tag.name]) res+=pad(1);
 		if (special[tag.name]) res+='\n';
 		res += '<' + tag.name ;
 		for (var arg in tag.attrs){
@@ -62,7 +65,8 @@ var render = function (dom,notab)
 			var tailShift= tail.shift();
 			var toClose = tailShift.shift()
 				,textAfter = tailShift.shift();
-			if (res.substr(-(toClose.length+2))=='<'+toClose+'>' || nows.indexOf(toClose)>-1) res += '</' + toClose + '>' + textAfter;
+			if (nows.indexOf(toClose)>-1) notab = originalnotab;
+			if (res.substr(-(toClose.length+2))=='<'+toClose+'>') res += '</' + toClose + '>' + textAfter;
 			else res += pad(1) + '</' + toClose + '>' + textAfter;
 		}
 		handleTag(line);
@@ -72,6 +76,7 @@ var render = function (dom,notab)
 		var tailShift= tail.shift();
 		var toClose = tailShift.shift()
 			,textAfter = tailShift.shift();
+		if (nows.indexOf(toClose)>-1) notab = originalnotab;
 		res += pad(1) + '</' + toClose + '>' + textAfter;
 	}
 	return res;
