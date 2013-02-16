@@ -7,6 +7,7 @@ var render = function (dom,notab)
 	var tail = [];
 	var special={'!--':'-->'};
 	var singletons=['!DOCTYPE','area','base','br','col','command','embed','hr','img','input','link','meta','param','source'];
+	var nows = ['pre']
 	var urlAttrs=['src','href'];
 	var quotedAttr = function (attr) {
 		var val = tag.sttrs[attr];
@@ -25,7 +26,7 @@ var render = function (dom,notab)
 		return temp;
 	}
 	var handleTag = function (tag) {
-		if (res.length &&  res[res.length-1]=='>' && !special[tag.name]) res+=pad(1);
+		if (res.length &&  res[res.length-1]=='>' && !special[tag.name] && nows.indexOf(tag.name)==-1) res+=pad(1);
 		if (special[tag.name]) res+='\n';
 		res += '<' + tag.name ;
 		for (var arg in tag.attrs){
@@ -61,7 +62,7 @@ var render = function (dom,notab)
 			var tailShift= tail.shift();
 			var toClose = tailShift.shift()
 				,textAfter = tailShift.shift();
-			if (res.substr(-(toClose.length+2))=='<'+toClose+'>') res += '</' + toClose + '>' + textAfter;
+			if (res.substr(-(toClose.length+2))=='<'+toClose+'>' || nows.indexOf(toClose)>-1) res += '</' + toClose + '>' + textAfter;
 			else res += pad(1) + '</' + toClose + '>' + textAfter;
 		}
 		handleTag(line);
@@ -341,8 +342,8 @@ HTML.prototype.read = function(source,toParent) {
 	read(source,this.dom,toParent);
 	return this;
 }
-HTML.prototype.render = function() {
-	return render(this.dom);
+HTML.prototype.render = function(notab) {
+	return render(this.dom,notab);
 }
 
 HTML.read = read;
