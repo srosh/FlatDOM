@@ -264,6 +264,17 @@ var each = function (cb) {
 	return this;
 }
 
+var sortFunc = function(a,b) {
+	if (a.parent == b.parent) return 0;
+	else if (a.parent < b.parent) {
+		if (a.index <= b.parent) return -1;
+		else return 1;
+	} else {
+		if (a.parent >= b.index) return 1;
+		else return -1;
+	}
+}
+
 // last.parent || last
 var makedom = function (dom) {
 	if (!(dom instanceof Array)) throw {no:2,desc:'DOM must be an instanceof Array'};
